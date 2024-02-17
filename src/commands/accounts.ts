@@ -1,23 +1,29 @@
-import { defineCommand } from "citty"
-import consola from "consola"
-import { colors } from "consola/utils"
-import { join } from "path/posix"
-import { loadConfig } from "../config"
-import { sync } from "../sync"
-import { getBranch, upperFirst } from "../utils"
+import { defineCommand } from 'citty'
+import consola from 'consola'
+import { colors } from 'consola/utils'
+import { join } from 'path/posix'
+import { loadConfig } from '../config'
+import { sync } from '../sync'
+import { getBranch, upperFirst } from '../utils'
 
 const syncAccounts = async (mode: 'pull' | 'push') => {
   const config = await loadConfig()
   if (!config) return
 
   const { accounts } = config.folderStructure
-  const source = `./${ accounts }/`
+  const source = `./${accounts}/`
 
   const branch = await getBranch()
-  const displaySource = colors.magenta(`${source}${branch ? colors.cyan(` (${branch})`) : ''}`)
-  const displayDestination = colors.magenta(join(config.host, config.remoteDir, source))
+  const displaySource = colors.magenta(
+    `${source}${branch ? colors.cyan(` (${branch})`) : ''}`,
+  )
+  const displayDestination = colors.magenta(
+    join(config.host, config.remoteDir, source),
+  )
   const direction = mode === 'pull' ? 'from' : 'to'
-  consola.log(`🔑 ${upperFirst(mode)} ${displaySource} ${direction} ${displayDestination}\n`)
+  consola.log(
+    `🔑 ${upperFirst(mode)} ${displaySource} ${direction} ${displayDestination}\n`,
+  )
 
   return sync(source, mode, {
     ...config,

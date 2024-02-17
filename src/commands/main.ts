@@ -1,13 +1,13 @@
-import { defineCommand } from "citty"
-import { relative, join } from "path/posix"
-import { cwd } from "process"
-import { loadConfig } from "../config"
-import { sync } from "../sync"
+import { defineCommand } from 'citty'
+import { relative, join } from 'path/posix'
+import { cwd } from 'process'
+import { loadConfig } from '../config'
+import { sync } from '../sync'
 import { accountsPull, accountsPush } from './accounts'
 import { contentPull, contentPush } from './content'
-import { getBranch } from "../utils"
-import { colors } from "consola/utils"
-import consola from "consola"
+import { getBranch } from '../utils'
+import { colors } from 'consola/utils'
+import consola from 'consola'
 
 export const main = defineCommand({
   run: async ({ rawArgs, cmd }) => {
@@ -31,14 +31,16 @@ export const main = defineCommand({
       `^${relative(cwd(), folderStructure.sessions)}`,
       `^${relative(cwd(), folderStructure.cache)}`,
     ]
-    const excludeGlob = [...config.excludeGlob, '.*', '.*/' ]
+    const excludeGlob = [...config.excludeGlob, '.*', '.*/']
     const include = config.include
     const includeGlob = [...config.includeGlob, '.htaccess']
 
     const branch = await getBranch()
     const displaySource = branch ? colors.cyan(` ${branch} `) : ''
-    const displayDestination = colors.magenta(join(config.host, config.remoteDir))
-    consola.log(`🚀 Deploy${displaySource}to ${displayDestination}\n`)    
+    const displayDestination = colors.magenta(
+      join(config.host, config.remoteDir),
+    )
+    consola.log(`🚀 Deploy${displaySource}to ${displayDestination}\n`)
 
     sync('./', 'push', {
       ...config,
@@ -53,5 +55,5 @@ export const main = defineCommand({
     ['content-pull']: contentPull,
     ['accounts-push']: accountsPush,
     ['accounts-pull']: accountsPull,
-  }
+  },
 })

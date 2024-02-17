@@ -1,4 +1,3 @@
-import { Config } from "./types"
+import { Config } from './types'
 
-export const defineConfig = (config: Config) => config 
-
+export const defineConfig = (config: Config) => config

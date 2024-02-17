@@ -1,4 +1,4 @@
-import { runMain } from "citty"
-import { main } from "./commands/main"
+import { runMain } from 'citty'
+import { main } from './commands/main'
 
 runMain(main)
