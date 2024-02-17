@@ -3,8 +3,8 @@ import { runMain } from "citty";
 
 // src/commands/main.ts
 import { defineCommand as defineCommand3 } from "citty";
-import { relative as relative2 } from "path/posix";
-import { cwd as cwd2 } from "process";
+import { relative } from "path/posix";
+import { cwd } from "process";
 
 // src/config.ts
 import { loadConfig as load } from "c12";
@@ -114,7 +114,7 @@ import { join } from "path/posix";
 var upperFirst = (string2) => string2.charAt(0).toUpperCase() + string2.slice(1);
 
 // src/sync.ts
-var confirm = (question) => new Promise((resolve2) => {
+var confirm = (question) => new Promise((resolve) => {
   const rl = readline.createInterface({ input, output });
   const formattedQuestion = `
 ${colors.green(
@@ -123,7 +123,7 @@ ${colors.green(
   rl.question(formattedQuestion, (answer) => {
     rl.close();
     const hasAgreed = ["yes", "y"].includes(answer.toLowerCase());
-    resolve2(hasAgreed);
+    resolve(hasAgreed);
   });
 });
 var runLftp = (commands, verbose) => {
@@ -151,10 +151,10 @@ var runLftp = (commands, verbose) => {
     consola2.error(data.toString());
     hasErrors = true;
   };
-  return new Promise((resolve2) => {
+  return new Promise((resolve) => {
     child.stdout.on("data", handleData);
     child.stderr.on("data", handleError);
-    child.on("exit", () => resolve2({ hasChanges, hasErrors }));
+    child.on("exit", () => resolve({ hasChanges, hasErrors }));
   });
 };
 var sync = async (source, mode, config) => {
@@ -294,11 +294,11 @@ var main = defineCommand3({
     const exclude = [
       ...config.exclude,
       "^node_modules/",
-      `^${relative2(cwd2(), folderStructure.content)}`,
-      `^${relative2(cwd2(), folderStructure.media)}`,
-      `^${relative2(cwd2(), folderStructure.accounts)}`,
-      `^${relative2(cwd2(), folderStructure.sessions)}`,
-      `^${relative2(cwd2(), folderStructure.cache)}`
+      `^${relative(cwd(), folderStructure.content)}`,
+      `^${relative(cwd(), folderStructure.media)}`,
+      `^${relative(cwd(), folderStructure.accounts)}`,
+      `^${relative(cwd(), folderStructure.sessions)}`,
+      `^${relative(cwd(), folderStructure.cache)}`
     ];
     const excludeGlob = [...config.excludeGlob, ".*", ".*/"];
     const include = config.include;

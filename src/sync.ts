@@ -2,9 +2,9 @@ import consola from "consola";
 import { colors } from "consola/utils";
 import { spawn } from "node:child_process";
 import { platform } from "node:os";
-import { cwd, stdin as input, stdout as output } from "node:process";
+import { stdin as input, stdout as output } from "node:process";
 import * as readline from "node:readline";
-import { join, relative, resolve } from "path/posix";
+import { join } from "path/posix";
 import { ConfigResolved } from "./types";
 import { upperFirst } from "./utils";
 
@@ -98,10 +98,6 @@ export const sync = async (
     ...config.includeGlob.map((path: string) => `--include-glob ${path}`),
     ...config.include.map((path: string) => `--include ${path}`),
   ].filter(Boolean);
-
-  // const local = relative(process.cwd(), config.local);
-  // const remote = relative(process.cwd(), config.remote);
-  // const [source, target] =  [local, remote] //reverse ? [local, remote] : [remote, local];
 
   if (config.verbose) {
     const mirror = `mirror ${flags.join(" ")} ${source} ${destination}`;
