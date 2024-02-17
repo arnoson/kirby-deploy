@@ -1,8 +1,10 @@
 import { defineCommand } from "citty"
 import consola from "consola"
-import { join, relative } from "path/posix"
+import { colors } from "consola/utils"
+import { join } from "path/posix"
 import { loadConfig } from "../config"
 import { sync } from "../sync"
+import { getBranch, upperFirst } from "../utils"
 
 const syncContent = async (mode: 'pull' | 'push') => {
   const config = await loadConfig()
@@ -10,6 +12,13 @@ const syncContent = async (mode: 'pull' | 'push') => {
 
   const { content } = config.folderStructure
   const source = `./${ content }/`
+
+  const branch = await getBranch()
+  const displaySource = colors.magenta(`${source}${branch ? colors.cyan(` (${branch})`) : ''}`)
+  const displayDestination = colors.magenta(join(config.host, config.remoteDir, source))
+  const direction = mode === 'pull' ? 'from' : 'to'
+  consola.log(`🗂️  ${upperFirst(mode)} ${displaySource} ${direction} ${displayDestination}\n`)
+
   return sync(source, mode, {
     ...config,
     // User provided includes/excludes can only be used in the main command
@@ -22,4 +31,4 @@ const syncContent = async (mode: 'pull' | 'push') => {
 }
 
 export const contentPush = defineCommand({ run: () => syncContent('push') })
-export const contentPull = defineCommand({ run: () => syncContent('push') })
+export const contentPull = defineCommand({ run: () => syncContent('pull') })

@@ -2,18 +2,16 @@ import consola from "consola";
 import { colors } from "consola/utils";
 import { spawn } from "node:child_process";
 import { platform } from "node:os";
-import { stdin as input, stdout as output } from "node:process";
+import { cwd, stdin as input, stdout as output } from "node:process";
 import * as readline from "node:readline";
 import { join } from "path/posix";
 import { ConfigResolved } from "./types";
-import { upperFirst } from "./utils";
+import { getBranch, isGit, upperFirst } from "./utils";
 
 const confirm = (question: string): Promise<boolean> =>
   new Promise((resolve) => {
     const rl = readline.createInterface({ input, output });
-    const formattedQuestion = `\n${colors.green(
-      "❯"
-    )} ${question} ${colors.yellow("(y/n)")} `;
+    const formattedQuestion = `\n${question} ${colors.yellow("(y/n)")} `;
     rl.question(formattedQuestion, (answer) => {
       rl.close();
       const hasAgreed = ["yes", "y"].includes(answer.toLowerCase());
@@ -33,7 +31,6 @@ const runLftp = (commands: string[], verbose: boolean): Promise<LftpResult> => {
 
   const handleData = (data: any) => {
     if (verbose) {
-      // const masked = data.toString().replaceAll('/:\/\/.+:.+@/g', '://<user>@<password>')
       const masked = data.toString().replace(/:\/\/.+:.+@/g, '://<user>:<password>@')
       console.log(`${colors.bgBlue(' LFTP ')} ${masked}`)
     }
@@ -112,7 +109,7 @@ export const sync = async (
   }
 
   if (config.dryRun) {
-    consola.start('Review changes...')
+    consola.log('Review changes...')
     consola.log('') // empty line
 
     const flagsJoined = [...flags, "--dry-run"].join(" ");
@@ -126,7 +123,7 @@ export const sync = async (
     ], config.verbose);
 
     if (!hasChanges) {
-      consola.info(`${upperFirst(targetName)} already up to date`);
+      consola.success(`${upperFirst(targetName)} already up to date`);
       return false;
     }
 
@@ -135,8 +132,7 @@ export const sync = async (
     consola.log(""); // empty line
   }
 
-  consola.start('Apply changes...')
-  consola.log('') // empty line
+  consola.log('Apply changes...\n')
 
   const mirror = `mirror ${flags.join(" ")} ${source} ${destination}`;
   const { hasChanges, hasErrors } = await runLftp([
@@ -148,7 +144,7 @@ export const sync = async (
   ], config.verbose);
 
   if (!hasChanges) {
-    consola.info(`${upperFirst(targetName)} already up to date`);
+    consola.success(`${upperFirst(targetName)} already up to date`);
     return false;
   }
 
