@@ -7,12 +7,12 @@ use Kirby\Http\Header;
 
 Kirby\Cms\App::plugin('arnoson/kirby-deploy', [
   'snippets' => [
-    'maintenance' => __DIR__ . '/maintenance.php'
+    'maintenance' => __DIR__ . '/maintenance.php',
   ],
   'routes' => [
     [
       'pattern' => 'plugin-kirby-deploy/(:all)',
-      'action' => function($command) {
+      'action' => function ($command) {
         $token = option('arnoson.kirby-deploy.token');
         $bearer = kirby()->request()->header('Authorization');
 
@@ -25,17 +25,17 @@ Kirby\Cms\App::plugin('arnoson/kirby-deploy', [
 
         if ($command === 'start') {
           F::write($maintenanceFile, '');
-        } else if ($command === 'finish') {
+        } elseif ($command === 'finish') {
           F::remove($maintenanceFile);
           kirby()->cache('pages')->flush();
         }
 
         return ['status' => 'ok'];
-      }
-    ]
+      },
+    ],
   ],
   'hooks' => [
-    'route:before' => function($route, $path) {
+    'route:before' => function ($route, $path) {
       $maintenanceFile = kirby()->root('index') . '/.maintenance';
       if (
         F::exists($maintenanceFile) &&
@@ -44,6 +44,6 @@ Kirby\Cms\App::plugin('arnoson/kirby-deploy', [
         snippet('maintenance');
         die();
       }
-    }
-  ]
+    },
+  ],
 ]);

@@ -4,3 +4,4 @@
 **/media
 /example/site/accounts
 composer.lock
+pnpm-lock.yaml

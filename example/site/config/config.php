@@ -2,6 +2,6 @@
   'cache' => ['pages' => true],
   'debug' => true,
   'arnoson.kirby-deploy' => [
-    'token' => '1234'
-  ]
+    'token' => '1234',
+  ],
 ];
