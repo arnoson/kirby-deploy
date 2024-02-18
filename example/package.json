@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "kirby-deploy",
+    "content-push": "kirby-deploy content-push",
+    "content-pull": "kirby-deploy content-pull",
+    "accounts-push": "kirby-deploy accounts-push",
+    "accounts-pull": "kirby-deploy accounts-pull"
+  },
+  "devDependencies": {
+    "kirby-deploy": "file:../packages/cli"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

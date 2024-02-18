@@ -8,6 +8,7 @@ import {
   optional,
   string,
   union,
+  url,
 } from 'valibot'
 
 export const FolderStructureSchema = object({
@@ -24,12 +25,15 @@ export const ConfigSchema = object({
   host: string(),
   user: string(),
   password: string(),
+  url: optional(string([url()])),
+  token: optional(string()),
   remoteDir: optional(string()),
   folderStructure: optional(
     union([literal('flat'), literal('public'), FolderStructureSchema]),
   ),
   verifyCertificate: optional(boolean()),
   checkComposerLock: optional(boolean()),
+  callWebhooks: optional(boolean()),
   dryRun: optional(boolean()),
   verbose: optional(boolean()),
   parallel: optional(number()),

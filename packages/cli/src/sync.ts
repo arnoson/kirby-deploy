@@ -2,11 +2,11 @@ import consola from 'consola'
 import { colors } from 'consola/utils'
 import { spawn } from 'node:child_process'
 import { platform } from 'node:os'
-import { cwd, stdin as input, stdout as output } from 'node:process'
+import { stdin as input, stdout as output } from 'node:process'
 import * as readline from 'node:readline'
 import { join } from 'path/posix'
 import { ConfigResolved } from './types'
-import { getBranch, isGit, upperFirst } from './utils'
+import { callWebhook, upperFirst } from './utils'
 
 const confirm = (question: string): Promise<boolean> =>
   new Promise((resolve) => {
@@ -136,28 +136,41 @@ export const sync = async (
     consola.log('') // empty line
   }
 
+  const webhook = `${config.url}/plugin-kirby-deploy`
+  if (config.callWebhooks) await callWebhook(`${webhook}/start`, config.token)
+
   consola.log('Apply changes...\n')
 
-  const mirror = `mirror ${flags.join(' ')} ${source} ${destination}`
-  const { hasChanges, hasErrors } = await runLftp(
-    [
-      ...settings,
-      `open ${config.host}`,
-      `user ${config.user} ${config.password}`,
-      mirror,
-      'bye',
-    ],
-    config.verbose,
-  )
+  // Make sure the finish hook is called even if an unexpected error occurs.
+  try {
+    const mirror = `mirror ${flags.join(' ')} ${source} ${destination}`
+    const { hasChanges, hasErrors } = await runLftp(
+      [
+        ...settings,
+        `open ${config.host}`,
+        `user ${config.user} ${config.password}`,
+        mirror,
+        'bye',
+      ],
+      config.verbose,
+    )
 
-  if (!hasChanges) {
-    consola.success(`${upperFirst(targetName)} already up to date`)
+    if (!hasChanges) {
+      consola.success(`${upperFirst(targetName)} already up to date`)
+      return false
+    }
+
+    consola.log('') // empty line
+    consola.success(
+      hasErrors ? 'All done (but with errors, see output above)!' : 'All done!',
+    )
+    return true
+  } catch (e) {
+    consola.error(e)
     return false
+  } finally {
+    if (config.callWebhooks) {
+      await callWebhook(`${webhook}/finish`, config.token)
+    }
   }
-
-  consola.log('') // empty line
-  consola.success(
-    hasErrors ? 'All done (but with errors, see output above)!' : 'All done!',
-  )
-  return true
 }

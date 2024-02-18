@@ -52,6 +52,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     parallel: 10,
     verifyCertificate: true,
     checkComposerLock: true,
+    callWebhooks: true,
     exclude: [],
     excludeGlob: [],
     include: [],

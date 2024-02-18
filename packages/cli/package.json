@@ -1,0 +1,29 @@
+{
+  "name": "kirby-deploy",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "type": "module",
+  "bin": {
+    "kirby-deploy": "./dist/cli.js"
+  },
+  "keywords": [],
+  "author": "Arno Schlipf",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup src/index.ts src/cli.ts --format esm --dts",
+    "dev": "tsup src/index.ts src/cli.ts --format esm --watch"
+  },
+  "devDependencies": {
+    "@prettier/plugin-php": "^0.22.2",
+    "@types/node": "^20.11.19",
+    "prettier": "^3.2.5",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "c12": "^1.8.0",
+    "citty": "^0.1.6",
+    "consola": "^3.2.3",
+    "valibot": "^0.28.1"
+  }
+}

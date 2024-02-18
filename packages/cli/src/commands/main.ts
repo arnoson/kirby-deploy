@@ -65,7 +65,7 @@ export const main = defineCommand({
     const includeGlob = [...config.includeGlob, '.htaccess']
 
     const branch = getBranch()
-    const displaySource = branch ? colors.cyan(` ${branch} `) : ''
+    const displaySource = branch ? colors.cyan(` ${branch} `) : ' '
     const displayDestination = colors.magenta(
       join(config.host, config.remoteDir),
     )
