@@ -27,21 +27,22 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
   }
 
   // Resolve shorthands
-  if (config.folderStructure === 'flat') {
-    config.folderStructure = {
-      content: 'content',
-      media: 'site/media',
-      accounts: 'site/accounts',
-      sessions: 'site/sessions',
-      cache: 'site/cache',
-    }
-  } else {
+  config.folderStructure ??= 'flat'
+  if (config.folderStructure === 'public') {
     config.folderStructure = {
       content: 'content',
       media: 'public/media',
       accounts: 'storage/accounts',
       sessions: 'storage/sessions',
       cache: 'storage/cache',
+    }
+  } else if (config.folderStructure === 'flat') {
+    config.folderStructure = {
+      content: 'content',
+      media: 'site/media',
+      accounts: 'site/accounts',
+      sessions: 'site/sessions',
+      cache: 'site/cache',
     }
   }
 
@@ -50,6 +51,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     dryRun: true,
     parallel: 10,
     verifyCertificate: true,
+    checkComposerLock: true,
     exclude: [],
     excludeGlob: [],
     include: [],

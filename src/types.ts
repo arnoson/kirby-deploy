@@ -29,6 +29,7 @@ export const ConfigSchema = object({
     union([literal('flat'), literal('public'), FolderStructureSchema]),
   ),
   verifyCertificate: optional(boolean()),
+  checkComposerLock: optional(boolean()),
   dryRun: optional(boolean()),
   verbose: optional(boolean()),
   parallel: optional(number()),
