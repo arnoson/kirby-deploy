@@ -8,7 +8,6 @@ import {
   optional,
   string,
   union,
-  url,
 } from 'valibot'
 
 export const FolderStructureSchema = object({
@@ -25,7 +24,7 @@ export const ConfigSchema = object({
   host: string(),
   user: string(),
   password: string(),
-  url: optional(string([url()])),
+  url: optional(string()),
   token: optional(string()),
   remoteDir: optional(string()),
   folderStructure: optional(
@@ -48,19 +47,3 @@ export type Config = Output<typeof ConfigSchema>
 export type ConfigResolved = Required<Omit<Config, 'folderStructure'>> & {
   folderStructure: FolderStructure
 }
-
-// export interface Config {
-//   host: string
-//   user: string
-//   password: string
-//   source: string
-//   destination: string
-//   exclude?: string[]
-//   excludeGlob?: string[]
-//   include?: string[]
-//   includeGlob?: string[]
-//   parallel?: number
-//   dereference?: boolean
-//   dryRun: boolean
-//   veryCertificate: boolean,
-// }

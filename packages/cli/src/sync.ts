@@ -1,70 +1,8 @@
 import consola from 'consola'
-import { colors } from 'consola/utils'
-import { spawn } from 'node:child_process'
-import { platform } from 'node:os'
-import { stdin as input, stdout as output } from 'node:process'
-import * as readline from 'node:readline'
 import { join } from 'path/posix'
+import { logMirror, mirror } from './mirror'
 import { ConfigResolved } from './types'
-import { callWebhook, upperFirst } from './utils'
-
-const confirm = (question: string): Promise<boolean> =>
-  new Promise((resolve) => {
-    const rl = readline.createInterface({ input, output })
-    const formattedQuestion = `\n${question} ${colors.yellow('(y/n)')} `
-    rl.question(formattedQuestion, (answer) => {
-      rl.close()
-      const hasAgreed = ['yes', 'y'].includes(answer.toLowerCase())
-      resolve(hasAgreed)
-    })
-  })
-
-type LftpResult = { hasChanges: boolean; hasErrors: boolean }
-const runLftp = (commands: string[], verbose: boolean): Promise<LftpResult> => {
-  const isWindows = platform() === 'win32'
-  const child = isWindows
-    ? spawn('wsl', ['lftp', '-c', commands.join('; ')])
-    : spawn('lftp', ['-c', commands.join('; ')])
-
-  let hasErrors = false
-  let hasChanges = false
-
-  const handleData = (data: any) => {
-    if (verbose) {
-      const masked = data
-        .toString()
-        .replace(/:\/\/.+:.+@/g, '://<user>:<password>@')
-      console.log(`${colors.bgBlue(' LFTP ')} ${masked}`)
-    }
-
-    data
-      .toString()
-      .split('\n')
-      .forEach((line: string) => {
-        let match: RegExpMatchArray | null = null
-        if ((match = line.match(/Transferring file `(.*)'/))) {
-          hasChanges = true
-          consola.log(colors.blue(`→ ${match[1]}`))
-        } else if (
-          (match = line.match(/Removing old (?:file|directory) `(.*)'/))
-        ) {
-          hasChanges = true
-          consola.log(colors.red(`⨯ ${match[1]}`))
-        }
-      })
-  }
-
-  const handleError = (data: any) => {
-    consola.error(data.toString())
-    hasErrors = true
-  }
-
-  return new Promise<LftpResult>((resolve) => {
-    child.stdout.on('data', handleData)
-    child.stderr.on('data', handleError)
-    child.on('exit', () => resolve({ hasChanges, hasErrors }))
-  })
-}
+import { callWebhook, confirm, upperFirst } from './utils'
 
 export const sync = async (
   source: string,
@@ -73,13 +11,14 @@ export const sync = async (
 ): Promise<boolean> => {
   const reverse = mode === 'push'
   const targetName = mode === 'push' ? 'remote' : 'local'
+  const webhook = `${config.url}/plugin-kirby-deploy`
   const destination =
     source === './' ? config.remoteDir : `./${join(config.remoteDir, source)}`
 
-  const settings = [
-    `set ftp:ssl-force true`,
-    `set ssl:verify-certificate ${config.verifyCertificate}`,
-  ]
+  const settings = {
+    'ftp:ssl-force': true,
+    'ssl:verify-certificate': config.verifyCertificate,
+  }
 
   const flags = [
     '--continue',
@@ -95,36 +34,23 @@ export const sync = async (
     ...config.excludeGlob.map((path: string) => `--exclude-glob ${path}`),
     ...config.includeGlob.map((path: string) => `--include-glob ${path}`),
     ...config.include.map((path: string) => `--include ${path}`),
-  ].filter(Boolean)
+  ].filter(Boolean) as string[]
 
   if (config.verbose) {
-    const mirror = `mirror ${flags.join(' ')} ${source} ${destination}`
-    const commands = [
-      ...settings,
-      `open ${config.host}`,
-      `user <user> <password>`, // mask credentials
-      mirror,
-      'bye',
-    ]
-    consola.log(`\n${colors.bgBlue(' LFTP ')} ${commands.join('; ')}\n`)
+    logMirror({ source, destination, settings, flags, config })
   }
 
   if (config.dryRun) {
     consola.log('Review changes...')
     consola.log('') // empty line
 
-    const flagsJoined = [...flags, '--dry-run'].join(' ')
-    const mirror = `mirror ${flagsJoined} ${source} ${destination}`
-    const { hasChanges } = await runLftp(
-      [
-        ...settings,
-        `open ${config.host}`,
-        `user ${config.user} ${config.password}`,
-        mirror,
-        'bye',
-      ],
-      config.verbose,
-    )
+    const { hasChanges } = await mirror({
+      source,
+      destination,
+      settings,
+      flags: [...flags, '--dry-run'],
+      config,
+    })
 
     if (!hasChanges) {
       consola.success(`${upperFirst(targetName)} already up to date`)
@@ -136,35 +62,19 @@ export const sync = async (
     consola.log('') // empty line
   }
 
-  const webhook = `${config.url}/plugin-kirby-deploy`
-  if (config.callWebhooks) await callWebhook(`${webhook}/start`, config.token)
-
   consola.log('Apply changes...\n')
 
   // Make sure the finish hook is called even if an unexpected error occurs.
+  if (config.callWebhooks) await callWebhook(`${webhook}/start`, config.token)
+  let hasChanges, hasErrors
   try {
-    const mirror = `mirror ${flags.join(' ')} ${source} ${destination}`
-    const { hasChanges, hasErrors } = await runLftp(
-      [
-        ...settings,
-        `open ${config.host}`,
-        `user ${config.user} ${config.password}`,
-        mirror,
-        'bye',
-      ],
-      config.verbose,
-    )
-
-    if (!hasChanges) {
-      consola.success(`${upperFirst(targetName)} already up to date`)
-      return false
-    }
-
-    consola.log('') // empty line
-    consola.success(
-      hasErrors ? 'All done (but with errors, see output above)!' : 'All done!',
-    )
-    return true
+    ;({ hasChanges, hasErrors } = await mirror({
+      source,
+      destination,
+      settings,
+      flags,
+      config,
+    }))
   } catch (e) {
     consola.error(e)
     return false
@@ -173,4 +83,15 @@ export const sync = async (
       await callWebhook(`${webhook}/finish`, config.token)
     }
   }
+
+  if (!hasChanges) {
+    consola.success(`${upperFirst(targetName)} already up to date`)
+    return false
+  }
+
+  consola.log('') // empty line
+  consola.success(
+    hasErrors ? 'All done (but with errors, see output above)!' : 'All done!',
+  )
+  return true
 }
