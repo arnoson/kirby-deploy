@@ -13,7 +13,7 @@ const syncAccounts = async (mode: 'pull' | 'push') => {
   const { accounts } = config.folderStructure
   const source = `./${accounts}/`
 
-  const branch = await getBranch()
+  const branch = getBranch()
   const displaySource = colors.magenta(
     `${source}${branch ? colors.cyan(` (${branch})`) : ''}`,
   )
