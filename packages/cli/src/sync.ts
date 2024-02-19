@@ -1,6 +1,6 @@
 import consola from 'consola'
 import { join } from 'path/posix'
-import { logMirror, mirror } from './mirror'
+import { logMirror, mirror } from './lftp/mirror'
 import { ConfigResolved } from './types'
 import { callWebhook, confirm, upperFirst } from './utils'
 

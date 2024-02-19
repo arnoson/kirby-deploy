@@ -1,42 +1,15 @@
 import { defineCommand } from 'citty'
-import { relative, join } from 'path/posix'
+import consola from 'consola'
+import { colors } from 'consola/utils'
+import { readFileSync } from 'fs'
+import { join, relative } from 'path/posix'
 import { cwd } from 'process'
 import { loadConfig } from '../config'
+import { cat } from '../lftp/cat'
 import { sync } from '../sync'
+import { getBranch } from '../utils'
 import { accountsPull, accountsPush } from './accounts'
 import { contentPull, contentPush } from './content'
-import { getBranch } from '../utils'
-import { colors } from 'consola/utils'
-import consola from 'consola'
-import { ConfigResolved } from '../types'
-import { platform } from 'os'
-import { spawnSync } from 'child_process'
-import { readFileSync } from 'fs'
-
-const readRemoteComposerLock = (config: ConfigResolved) => {
-  const settings = [
-    `set ftp:ssl-force true`,
-    `set ssl:verify-certificate ${config.verifyCertificate}`,
-  ]
-
-  const commands = [
-    ...settings,
-    `open ${config.host}`,
-    `user ${config.user} ${config.password}`,
-    `cat ./composer.lock`,
-    'bye',
-  ]
-
-  const isWindows = platform() === 'win32'
-  const child = isWindows
-    ? spawnSync('wsl', ['lftp', '-c', commands.join('; ')], {
-        encoding: 'utf-8',
-      })
-    : spawnSync('lftp', ['-c', commands.join('; ')], { encoding: 'utf-8' })
-
-  if (child.stderr) consola.error(child.stderr)
-  return child.stdout
-}
 
 export const main = defineCommand({
   run: async ({ rawArgs, cmd }) => {
@@ -75,7 +48,7 @@ export const main = defineCommand({
       const localComposerLock = readFileSync('./composer.lock', {
         encoding: 'utf-8',
       })
-      const remoteComposerLock = readRemoteComposerLock(config)
+      const remoteComposerLock = cat('./composer.lock', config)
       const skipVendor = localComposerLock === remoteComposerLock
       if (skipVendor) {
         exclude.push('^vendor/', '^kirby/')
