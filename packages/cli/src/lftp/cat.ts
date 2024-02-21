@@ -3,16 +3,16 @@ import consola from 'consola'
 import { platform } from 'os'
 import { ConfigResolved } from '../types'
 
-export const cat = (file: string, config: ConfigResolved) => {
-  const settings = {
-    'ftp:ssl-force': true,
-    'ssl:verify-certificate': config.verifyCertificate,
-  }
-
+export const cat = (
+  file: string,
+  { host, user, password, lftpSettings }: ConfigResolved,
+) => {
   const commands = [
-    ...Object.entries(settings).map(([key, value]) => `set ${key} ${value}`),
-    `open ${config.host}`,
-    `user ${config.user} ${config.password}`,
+    ...Object.entries(lftpSettings).map(
+      ([key, value]) => `set ${key} ${value}`,
+    ),
+    `open ${host}`,
+    `user ${user} ${password}`,
     `cat ${file}`,
     'bye',
   ]

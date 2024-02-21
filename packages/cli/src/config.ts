@@ -50,13 +50,13 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     remoteDir: './',
     dryRun: true,
     parallel: 10,
-    verifyCertificate: true,
     checkComposerLock: true,
     callWebhooks: true,
     exclude: [],
     excludeGlob: [],
     include: [],
     includeGlob: [],
+    lftpSettings: { 'ftp:ssl-force': true },
     ...config,
   }
 

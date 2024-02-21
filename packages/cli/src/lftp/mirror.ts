@@ -4,30 +4,23 @@ import { spawn } from 'node:child_process'
 import { platform } from 'node:os'
 import { ConfigResolved } from '../types'
 
-interface Options {
-  source: string
-  destination: string
-  flags: string[]
-  settings: Record<string, any>
-  config: ConfigResolved
-}
-
 interface Result {
   hasChanges: boolean
   hasErrors: boolean
 }
 
-export const mirror = ({
-  source,
-  destination,
-  flags,
-  settings,
-  config,
-}: Options): Promise<Result> => {
+export const mirror = (
+  source: string,
+  destination: string,
+  flags: string[],
+  { lftpSettings, host, user, password }: ConfigResolved,
+): Promise<Result> => {
   const commands = [
-    ...Object.entries(settings).map(([key, value]) => `set ${key} ${value}`),
-    `open ${config.host}`,
-    `user ${config.user} ${config.password}`, // mask credentials
+    ...Object.entries(lftpSettings).map(
+      ([key, value]) => `set ${key} ${value}`,
+    ),
+    `open ${host}`,
+    `user ${user} ${password}`, // mask credentials
     `mirror ${flags.join(' ')} ${source} ${destination}`,
     'bye',
   ]
@@ -69,16 +62,17 @@ export const mirror = ({
   })
 }
 
-export const logMirror = ({
-  source,
-  destination,
-  settings,
-  flags,
-  config,
-}: Options) => {
+export const logMirror = (
+  source: string,
+  destination: string,
+  flags: string[],
+  { lftpSettings, host }: ConfigResolved,
+) => {
   const commands = [
-    ...Object.entries(settings).map(([key, value]) => `set ${key} ${value}`),
-    `open ${config.host}`,
+    ...Object.entries(lftpSettings).map(
+      ([key, value]) => `set ${key} ${value}`,
+    ),
+    `open ${host}`,
     `user <user> <password>`, // mask credentials
     `mirror ${flags.join(' ')} ${source} ${destination}`,
     'bye',

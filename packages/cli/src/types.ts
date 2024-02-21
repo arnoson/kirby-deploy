@@ -1,11 +1,13 @@
 import {
   Output,
+  any,
   array,
   boolean,
   literal,
   number,
   object,
   optional,
+  record,
   string,
   union,
 } from 'valibot'
@@ -30,7 +32,6 @@ export const ConfigSchema = object({
   folderStructure: optional(
     union([literal('flat'), literal('public'), FolderStructureSchema]),
   ),
-  verifyCertificate: optional(boolean()),
   checkComposerLock: optional(boolean()),
   callWebhooks: optional(boolean()),
   dryRun: optional(boolean()),
@@ -40,6 +41,7 @@ export const ConfigSchema = object({
   excludeGlob: optional(array(string())),
   include: optional(array(string())),
   includeGlob: optional(array(string())),
+  lftpSettings: optional(record(string(), any())),
 })
 
 export type Config = Output<typeof ConfigSchema>

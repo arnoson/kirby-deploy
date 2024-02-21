@@ -15,11 +15,6 @@ export const sync = async (
   const destination =
     source === './' ? config.remoteDir : `./${join(config.remoteDir, source)}`
 
-  const settings = {
-    'ftp:ssl-force': true,
-    'ssl:verify-certificate': config.verifyCertificate,
-  }
-
   const flags = [
     '--continue',
     '--only-newer',
@@ -37,20 +32,19 @@ export const sync = async (
   ].filter(Boolean) as string[]
 
   if (config.verbose) {
-    logMirror({ source, destination, settings, flags, config })
+    logMirror(source, destination, flags, config)
   }
 
   if (config.dryRun) {
     consola.log('Review changes...')
     consola.log('') // empty line
 
-    const { hasChanges } = await mirror({
+    const { hasChanges } = await mirror(
       source,
       destination,
-      settings,
-      flags: [...flags, '--dry-run'],
+      [...flags, '--dry-run'],
       config,
-    })
+    )
 
     if (!hasChanges) {
       consola.success(`${upperFirst(targetName)} already up to date`)
@@ -68,13 +62,12 @@ export const sync = async (
   if (config.callWebhooks) await callWebhook(`${webhook}/start`, config.token)
   let hasChanges, hasErrors
   try {
-    ;({ hasChanges, hasErrors } = await mirror({
+    ;({ hasChanges, hasErrors } = await mirror(
       source,
       destination,
-      settings,
       flags,
       config,
-    }))
+    ))
   } catch (e) {
     consola.error(e)
     return false
