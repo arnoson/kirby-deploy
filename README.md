@@ -66,6 +66,7 @@ See the `/example` for a more detailed setup with `.env` files and npm scripts.
 
 ## Roadmap
 
+- [ ] Allow setting lftp flags in config
 - [ ] Better error handling
 - [ ] Test `sftp`, right now I only use it for `ftps`
 
