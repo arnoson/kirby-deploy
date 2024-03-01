@@ -1,10 +1,18 @@
-# Kirby Deploy
+<p align="center">
+  <img src="./.github/kirby-deploy-logo.svg"
+ alt="Kirby Template Sugar" width="150" height="150">
+</p>
+
+<h1 align="center">Kirby Deploy</h1>
 
 Automatically upload your Kirby sites to any webspace via ftp.
 
 We have all been there: manually dragging and dropping files into an ftp client like FileZilla to upload our websites to the server. This is not only cumbersome, but also error-prone if you forget to upload some changed files.
 
 There are better tools to automate this process like rsync or lftp, but they are not the easiest to use. Kirby Deploy wraps lftp, provides good defaults and ships you around the edges.
+
+> [!WARNING]  
+> This tool is in it's early stages. Use at your own risk and create a backup of your remote/local data before you apply it.
 
 ## Features
 
@@ -13,6 +21,10 @@ There are better tools to automate this process like rsync or lftp, but they are
 - 🗂️ Push or pull content to sync your local development
 - 🚧 Displays a maintenance note on your website during deployment
 - 🧹 Clears the cache after deployment
+
+## Demo
+
+![Example](./.github/kirby-deploy-demo.svg)
 
 ## Installation
 
@@ -38,7 +50,7 @@ Setup your [config](#config) and deploy your website. All commands will start a 
 npx kirby-deploy
 ```
 
-The content and accounts folder are **not** uploaded, to prevent you from messing up your production website at a later stage. So for the first time deployment you would also have to run:
+The content and accounts folder are **not** uploaded, to prevent you from messing up your production website at a later stage. So for the first time deployment you also have to run:
 
 ```sh
 npx kirby-deploy content-push
@@ -51,6 +63,11 @@ npx kirby-deploy accounts-push
 ```
 
 See the `/example` for a more detailed setup with `.env` files and npm scripts.
+
+## Roadmap
+
+- [ ] Better error handling
+- [ ] Test `sftp`, right now I only use it for `ftps`
 
 ## Config
 
@@ -85,11 +102,16 @@ export default defineConfig {
 }
 ```
 
-### Folder Structure
+Note: don't hardcode your ftp credentials in the config, use an `.env` file instead. See the `/example` folder.
+
+### Advanced
 
 ```js
-{
-  // The folder structure of your website. The default is 'flat' which is Kirby's
+// kirby-deploy.config.js
+
+import { defineConfig } from 'kirby-deploy'
+export default defineConfig {
+  // The default folder structure is 'flat' which is Kirby's
   // default structure. If you use a public folder structure use 'public'...
   folderStructure: 'public',
   // ...or define a custom structure
@@ -100,13 +122,7 @@ export default defineConfig {
     sessions: 'storage/sessions',
     cache: 'storage/cache',
   },
-}
-```
 
-### Exclude/Include
-
-```js
-{
   // Excluding additional files an folders from syncing. Uses lftp's exclude
   // and exclude-glob.
   exclude: ['^my-excluded-folder/'],
@@ -114,20 +130,12 @@ export default defineConfig {
   // Include files and folders that are matched by the exclude and exclude-glob.
   include: ['^my-included-folder/'],
   includeGlob: ['*-include.ts'],
-}
-```
 
-### Additional lftp config
-
-```js
-{
   // lftp's --parallel flag.
   parallel: 10,
-
   // lftp's settings. `ssl-force` is activated by default. Refer to the lftp
   // manual for other settings.
   lftpSettings: {'ftp:ssl-force': true },
-
   // Show additional information, useful for debugging.
   // Note: this is *not* lftp's --verbose flag, but a flag of this tool to
   // show you mostly lftp related output.
@@ -185,7 +193,7 @@ Note: this will _overwrite_ local files and _delete_ any local files that don't 
 
 ## Troubleshooting
 
-If you can't connect to your ftp server, try connecting with lftp directly to se if this is a general issue with lftp or with this tool.
+If you can't connect to your ftp server, try connecting with lftp directly to see if this is a general issue with lftp or with this tool.
 
 Try listing e.g. your directory.
 
