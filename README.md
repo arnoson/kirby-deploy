@@ -1,6 +1,6 @@
 <p align="center">
   <img src="./.github/kirby-deploy-logo.svg"
- alt="Kirby Template Sugar" width="150" height="150">
+ alt="Kirby Deploy" width="135" height="135">
 </p>
 
 <h1 align="center">Kirby Deploy</h1>
@@ -14,6 +14,10 @@ There are better tools to automate this process like rsync or lftp, but they are
 > [!WARNING]  
 > This tool is in it's early stages. Use at your own risk and create a backup of your remote/local data before you apply it.
 
+## Demo
+
+![Example](./.github/kirby-deploy-demo.svg)
+
 ## Features
 
 - 📡 Uses ftp (no SSH-access required)
@@ -21,10 +25,6 @@ There are better tools to automate this process like rsync or lftp, but they are
 - 🗂️ Push or pull content to sync your local development
 - 🚧 Displays a maintenance note on your website during deployment
 - 🧹 Clears the cache after deployment
-
-## Demo
-
-![Example](./.github/kirby-deploy-demo.svg)
 
 ## Installation
 
