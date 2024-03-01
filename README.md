@@ -64,12 +64,6 @@ npx kirby-deploy accounts-push
 
 See the `/example` for a more detailed setup with `.env` files and npm scripts.
 
-## Roadmap
-
-- [ ] Allow setting lftp flags in config
-- [ ] Better error handling
-- [ ] Test `sftp`, right now I only use it for `ftps`
-
 ## Config
 
 ### Basic
@@ -205,3 +199,16 @@ open ftp://example.com
 user user_name password
 ls
 ```
+
+## Roadmap
+
+- [ ] Allow setting lftp flags in config
+- [ ] Better error handling
+- [ ] Test `sftp`, right now I only use it for `ftps`
+
+## Credits
+
+Thanks to
+
+- [lftp](https://lftp.yar.ru/)
+- [rploy](https://github.com/jongacnik/rploy)
