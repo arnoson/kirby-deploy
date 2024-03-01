@@ -5,8 +5,6 @@
 
 <h1 align="center">Kirby Deploy</h1>
 
-Automatically upload your Kirby sites to any webspace via ftp.
-
 We have all been there: manually dragging and dropping files into an ftp client like FileZilla to upload our websites to the server. This is not only cumbersome, but also error-prone if you forget to upload some changed files.
 
 There are better tools to automate this process like rsync or lftp, but they are not the easiest to use. Kirby Deploy wraps lftp, provides good defaults and ships you around the edges.
