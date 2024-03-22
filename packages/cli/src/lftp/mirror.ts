@@ -13,7 +13,7 @@ export const mirror = (
   source: string,
   destination: string,
   flags: string[],
-  { lftpSettings, host, user, password }: ConfigResolved,
+  { lftpSettings, host, user, password, verbose }: ConfigResolved,
 ): Promise<Result> => {
   const commands = [
     ...Object.entries(lftpSettings).map(
@@ -33,6 +33,7 @@ export const mirror = (
   let hasChanges = false
 
   const handleData = (data: any) => {
+    if (verbose) consola.log(`${colors.bgBlue(' LFTP ')} ${data}\n`)
     data
       .toString()
       .split('\n')
