@@ -26,7 +26,7 @@ There are better tools to automate this process like rsync or lftp, but they are
 
 ## Installation
 
-Perquisites: install [lftp](https://lftp.yar.ru/). If you are using windows, install lftp in WSL (your code doesn't have to be located in WSL).
+Prerequisites: install [lftp](https://lftp.yar.ru/). If you are using windows, install lftp in WSL (your code doesn't have to be located in WSL).
 
 Install the Kirby plugin
 
