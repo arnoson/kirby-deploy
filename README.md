@@ -124,15 +124,14 @@ export default defineConfig {
   include: ['^my-included-folder/'],
   includeGlob: ['*-include.ts'],
 
-  // lftp's --parallel flag.
-  parallel: 10,
-  // lftp's settings. `ssl-force` is activated by default. Refer to the lftp
-  // manual for other settings.
-  lftpSettings: {'ftp:ssl-force': true },
   // Show additional information, useful for debugging.
-  // Note: this is *not* lftp's --verbose flag, but a flag of this tool to
-  // show you mostly lftp related output.
   verbose: true,
+
+  // Additional lftp settings.
+  lftpSettings: { 'ftp:ssl-force': true },
+
+  // Additional lftp flags.
+  lftpFlags: { '--no-perms': true },
 }
 ```
 

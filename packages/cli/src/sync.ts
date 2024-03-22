@@ -15,21 +15,24 @@ export const sync = async (
   const destination =
     source === './' ? config.remoteDir : `./${join(config.remoteDir, source)}`
 
-  const flags = [
-    '--continue',
-    '--only-newer',
-    '--overwrite',
-    '--use-cache',
-    '--delete',
-    '--verbose',
-    `--parallel=${config.parallel}`,
-    '--dereference',
-    reverse && '--reverse',
-    ...config.exclude.map((path: string) => `--exclude ${path}`),
-    ...config.excludeGlob.map((path: string) => `--exclude-glob ${path}`),
-    ...config.includeGlob.map((path: string) => `--include-glob ${path}`),
-    ...config.include.map((path: string) => `--include ${path}`),
-  ].filter(Boolean) as string[]
+  const flagsRecord = {
+    '--continue': true,
+    '--only-newer': true,
+    '--overwrite': true,
+    '--use-cache': true,
+    '--delete': true,
+    '--verbose': true,
+    '--reverse': reverse,
+    '--exclude': config.exclude.join(' ') || false,
+    '--exclude-glob': config.excludeGlob.join(' ') || false,
+    '--include': config.include.join(' ') || false,
+    '--include-glob': config.includeGlob.join(' ') || false,
+    ...config.lftpFlags,
+  }
+
+  const flags = Object.entries(flagsRecord)
+    .filter(([_, value]) => value !== false)
+    .map(([key, value]) => (value === true ? `${key}` : `${key} ${value}`))
 
   if (config.verbose) {
     logMirror(source, destination, flags, config)

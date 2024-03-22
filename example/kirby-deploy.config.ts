@@ -1,4 +1,4 @@
-import { defineConfig } from 'kirby-deploy'
+import { defineConfig } from '../packages/cli/src'
 
 export default defineConfig({
   host: process.env.FTP_HOST!,
@@ -6,4 +6,6 @@ export default defineConfig({
   password: process.env.FTP_PASSWORD!,
   url: process.env.URL,
   token: process.env.TOKEN,
+  lftpFlags: { '--no-perms': true },
+  verbose: true,
 })

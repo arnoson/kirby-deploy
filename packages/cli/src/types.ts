@@ -42,6 +42,7 @@ export const ConfigSchema = object({
   include: optional(array(string())),
   includeGlob: optional(array(string())),
   lftpSettings: optional(record(string(), any())),
+  lftpFlags: optional(record(string(), any())),
 })
 
 export type Config = Output<typeof ConfigSchema>
