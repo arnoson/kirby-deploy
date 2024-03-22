@@ -61,11 +61,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
       'ftp:ssl-force': true,
       ...config.lftpSettings,
     },
-    lftpFlags: {
-      '--parallel': 10,
-      '--dereference': true,
-      ...config.lftpFlags,
-    },
+    lftpFlags: ['--parallel=10', '--dereference', ...(config.lftpFlags ?? [])],
   }
 
   return config as ConfigResolved

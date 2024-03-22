@@ -131,7 +131,7 @@ export default defineConfig {
   lftpSettings: { 'ftp:ssl-force': true },
 
   // Additional lftp flags.
-  lftpFlags: { '--no-perms': true },
+  lftpFlags: ['--no-perms'],
 }
 ```
 
