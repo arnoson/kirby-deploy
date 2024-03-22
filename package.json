@@ -19,6 +19,6 @@
     "./packages/cli"
   ],
   "devDependencies": {
-    "bumpp": "^9.3.0"
+    "bumpp": "^9.4.0"
   }
 }
