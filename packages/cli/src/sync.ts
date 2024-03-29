@@ -11,10 +11,20 @@ export const sync = async (
 ): Promise<boolean> => {
   const reverse = mode === 'push'
   const targetName = mode === 'push' ? 'remote' : 'local'
-  const webhook = `${config.url}/plugin-kirby-deploy`
+  const webhookBase = `${config.url}/plugin-kirby-deploy`
   const shouldCallWebhooks = mode === 'push' && config.callWebhooks
   const destination =
     source === './' ? config.remoteDir : `./${join(config.remoteDir, source)}`
+
+  if (shouldCallWebhooks && !config.token) {
+    consola.error('token needed to call webhooks')
+    return false
+  }
+
+  if (shouldCallWebhooks && !config.url) {
+    consola.error('url needed to call webhooks')
+    return false
+  }
 
   const flags = [
     '--continue',
@@ -58,7 +68,9 @@ export const sync = async (
 
   consola.log('Apply changes...\n')
 
-  if (shouldCallWebhooks) await callWebhook(`${webhook}/start`, config.token)
+  if (shouldCallWebhooks) {
+    await callWebhook(`${webhookBase}/start`, config.token!)
+  }
   // Make sure the finish hook is called even if an unexpected error occurs.
   let hasChanges, hasErrors
   try {
@@ -72,7 +84,9 @@ export const sync = async (
     consola.error(e)
     return false
   } finally {
-    if (shouldCallWebhooks) await callWebhook(`${webhook}/finish`, config.token)
+    if (shouldCallWebhooks) {
+      await callWebhook(`${webhookBase}/finish`, config.token!)
+    }
   }
 
   if (!hasChanges) {
