@@ -12,6 +12,7 @@ export const sync = async (
   const reverse = mode === 'push'
   const targetName = mode === 'push' ? 'remote' : 'local'
   const webhook = `${config.url}/plugin-kirby-deploy`
+  const shouldCallWebhooks = mode === 'push' && config.callWebhooks
   const destination =
     source === './' ? config.remoteDir : `./${join(config.remoteDir, source)}`
 
@@ -57,8 +58,8 @@ export const sync = async (
 
   consola.log('Apply changes...\n')
 
+  if (shouldCallWebhooks) await callWebhook(`${webhook}/start`, config.token)
   // Make sure the finish hook is called even if an unexpected error occurs.
-  if (config.callWebhooks) await callWebhook(`${webhook}/start`, config.token)
   let hasChanges, hasErrors
   try {
     ;({ hasChanges, hasErrors } = await mirror(
@@ -71,9 +72,7 @@ export const sync = async (
     consola.error(e)
     return false
   } finally {
-    if (config.callWebhooks) {
-      await callWebhook(`${webhook}/finish`, config.token)
-    }
+    if (shouldCallWebhooks) await callWebhook(`${webhook}/finish`, config.token)
   }
 
   if (!hasChanges) {
