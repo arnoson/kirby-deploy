@@ -47,6 +47,9 @@ export const ConfigSchema = object({
 
 export type Config = Output<typeof ConfigSchema>
 
-export type ConfigResolved = Required<Omit<Config, 'folderStructure'>> & {
+type ConfigWithDefaults = Pick<Config, 'url' | 'token'> &
+  Required<Omit<Config, 'url' | 'token'>>
+
+export type ConfigResolved = Omit<ConfigWithDefaults, 'folderStructure'> & {
   folderStructure: FolderStructure
 }

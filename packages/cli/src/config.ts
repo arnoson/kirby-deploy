@@ -1,7 +1,7 @@
 import { loadConfig as load } from 'c12'
 import consola from 'consola'
 import { flatten, parse } from 'valibot'
-import { Config, ConfigResolved, ConfigSchema } from './types'
+import { Config, ConfigResolved, ConfigSchema, FolderStructure } from './types'
 
 export const loadConfig = async (): Promise<ConfigResolved | null> => {
   let { config, configFile } = await load<Config>({
@@ -27,9 +27,11 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
   }
 
   // Resolve shorthands
+
+  let folderStructure: FolderStructure
   config.folderStructure ??= 'flat'
   if (config.folderStructure === 'public') {
-    config.folderStructure = {
+    folderStructure = {
       content: 'content',
       media: 'public/media',
       accounts: 'storage/accounts',
@@ -37,18 +39,22 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
       cache: 'storage/cache',
     }
   } else if (config.folderStructure === 'flat') {
-    config.folderStructure = {
+    // 'flat' structure is the default.
+    folderStructure = {
       content: 'content',
       media: 'site/media',
       accounts: 'site/accounts',
       sessions: 'site/sessions',
       cache: 'site/cache',
     }
+  } else {
+    folderStructure = config.folderStructure
   }
 
-  config = {
+  const configResolved = {
     remoteDir: './',
     dryRun: true,
+    verbose: false,
     parallel: 10,
     checkComposerLock: true,
     callWebhooks: true,
@@ -57,12 +63,14 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     include: [],
     includeGlob: [],
     ...config,
+    folderStructure,
     lftpSettings: {
       'ftp:ssl-force': true,
       ...config.lftpSettings,
     },
     lftpFlags: ['--parallel=10', '--dereference', ...(config.lftpFlags ?? [])],
-  }
+    url: 'fu',
+  } satisfies ConfigResolved
 
-  return config as ConfigResolved
+  return configResolved
 }
