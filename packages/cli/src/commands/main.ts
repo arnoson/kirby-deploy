@@ -35,7 +35,7 @@ export const main = defineCommand({
     ]
     const excludeGlob = [...config.excludeGlob, '.*', '.*/']
     const include = config.include
-    const includeGlob = [...config.includeGlob, '.htaccess']
+    const includeGlob = [...config.includeGlob, '.htaccess', '.vite/']
 
     const branch = getBranch()
     const displaySource = branch ? colors.cyan(` ${branch} `) : ' '
