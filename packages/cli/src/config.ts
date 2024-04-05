@@ -69,7 +69,6 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
       ...config.lftpSettings,
     },
     lftpFlags: ['--parallel=10', '--dereference', ...(config.lftpFlags ?? [])],
-    url: 'fu',
   } satisfies ConfigResolved
 
   return configResolved
