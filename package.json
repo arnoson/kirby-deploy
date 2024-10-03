@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "main": "dist/index.js",
+  "packageManager": "pnpm@9.2.0",
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm --filter \"./packages/**\" build",
