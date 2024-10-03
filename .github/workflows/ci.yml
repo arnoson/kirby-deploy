@@ -14,16 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
 
-      - name: Install
-        run: pnpm install
-
-      - name: Check format
-        run: pnpm run format-check
-
-      - name: Check typs
-        run: pnpm run -r type-check
+      - run: pnpm install
+      - run: pnpm run format-check
+      - run: pnpm run -r type-check
