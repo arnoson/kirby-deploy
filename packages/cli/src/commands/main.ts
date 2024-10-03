@@ -10,6 +10,7 @@ import { sync } from '../sync'
 import { getBranch } from '../utils'
 import { accountsPull, accountsPush } from './accounts'
 import { contentPull, contentPush } from './content'
+import { languagesPull, languagesPush } from './languages'
 
 export const main = defineCommand({
   run: async ({ rawArgs, cmd }) => {
@@ -32,6 +33,7 @@ export const main = defineCommand({
       `^${relative(cwd(), folderStructure.accounts)}`,
       `^${relative(cwd(), folderStructure.sessions)}`,
       `^${relative(cwd(), folderStructure.cache)}`,
+      `^${relative(cwd(), join(folderStructure.site, 'languages'))}`,
     ]
     const excludeGlob = [...config.excludeGlob, '.*', '.*/']
     const include = config.include
@@ -67,7 +69,11 @@ export const main = defineCommand({
   subCommands: {
     ['content-push']: contentPush,
     ['content-pull']: contentPull,
+
     ['accounts-push']: accountsPush,
     ['accounts-pull']: accountsPull,
+
+    ['languages-push']: languagesPush,
+    ['languages-pull']: languagesPull,
   },
 })

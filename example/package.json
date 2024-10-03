@@ -8,7 +8,9 @@
     "content-push": "kirby-deploy content-push",
     "content-pull": "kirby-deploy content-pull",
     "accounts-push": "kirby-deploy accounts-push",
-    "accounts-pull": "kirby-deploy accounts-pull"
+    "accounts-pull": "kirby-deploy accounts-pull",
+    "languages-push": "kirby-deploy languages-push",
+    "languages-pull": "kirby-deploy languages-pull"
   },
   "devDependencies": {
     "kirby-deploy": "file:../packages/cli"

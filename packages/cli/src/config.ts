@@ -37,6 +37,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
       accounts: 'storage/accounts',
       sessions: 'storage/sessions',
       cache: 'storage/cache',
+      site: 'site',
     }
   } else if (config.folderStructure === 'flat') {
     // 'flat' structure is the default.
@@ -46,6 +47,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
       accounts: 'site/accounts',
       sessions: 'site/sessions',
       cache: 'site/cache',
+      site: 'site',
     }
   } else {
     folderStructure = config.folderStructure

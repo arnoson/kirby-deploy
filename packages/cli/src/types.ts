@@ -18,6 +18,7 @@ export const FolderStructureSchema = object({
   accounts: string(),
   sessions: string(),
   cache: string(),
+  site: string(),
 })
 
 export type FolderStructure = Output<typeof FolderStructureSchema>
