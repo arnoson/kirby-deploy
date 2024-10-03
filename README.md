@@ -134,7 +134,8 @@ export default defineConfig {
 
 ## Commands
 
-> [!CAUTION] > `deploy` and all `push` commands will overwrite remote files or delete them if they don't exist locally. Likewise all `pull` commands will overwrite local files or delete them.
+> [!CAUTION]
+>  `deploy` and all `push` commands will overwrite remote files or delete them if they don't exist locally. Likewise all `pull` commands will overwrite local files or delete them.
 
 ### 🚀 Deploy
 
