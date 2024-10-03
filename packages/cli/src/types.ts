@@ -1,8 +1,8 @@
 import {
-  Output,
   any,
   array,
   boolean,
+  InferInput,
   literal,
   number,
   object,
@@ -21,7 +21,7 @@ export const FolderStructureSchema = object({
   site: string(),
 })
 
-export type FolderStructure = Output<typeof FolderStructureSchema>
+export type FolderStructure = InferInput<typeof FolderStructureSchema>
 
 export const ConfigSchema = object({
   host: string(),
@@ -46,7 +46,7 @@ export const ConfigSchema = object({
   lftpFlags: optional(array(string())),
 })
 
-export type Config = Output<typeof ConfigSchema>
+export type Config = InferInput<typeof ConfigSchema>
 
 type ConfigWithDefaults = Pick<Config, 'url' | 'token'> &
   Required<Omit<Config, 'url' | 'token'>>

@@ -19,8 +19,9 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     parse(ConfigSchema, config)
   } catch (e: any) {
     const issues = flatten<typeof ConfigSchema>(e).nested
+    if (!issues) return null
     const info = Object.entries(issues)
-      .map(([key, messages]) => `  - ${key} (${messages.join(', ')})`)
+      .map(([key, messages = []]) => `  - ${key} (${messages.join(', ')})`)
       .join('\n')
     consola.error(`Invalid properties in ${configFile}\n${info}`)
     return null
