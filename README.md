@@ -48,16 +48,12 @@ Setup your [config](#config) and deploy your website. All commands will start a 
 npx kirby-deploy
 ```
 
-The content and accounts folder are **not** uploaded, to prevent you from messing up your production website at a later stage. So for the first time deployment you also have to run:
+The content, languages and accounts folder are **not** uploaded, to prevent you from messing up your production website at a later stage. So for the first time deployment you also have to run:
 
 ```sh
 npx kirby-deploy content-push
-```
-
-and
-
-```sh
 npx kirby-deploy accounts-push
+npx kirby-deploy languages-push // If you have a multi-language setup
 ```
 
 See the `/example` for a more detailed setup with `.env` files and npm scripts.
@@ -82,8 +78,6 @@ export default defineConfig {
 
   // The URL to your website
   url: 'https://example.com',
-  // A secret token, can be anything you like.
-  token: 'my_secret_token',
 
   // Wether or not to check if the `composer.lock` file has changed to speed
   // up deployment.
@@ -92,6 +86,8 @@ export default defineConfig {
   // Wether ot not call webhooks to set your website in maintenance mode during
   // deployment and clear the pages cache afterwards.
   callWebhooks: true,
+  // A secret token to protect the web hooks.
+  token: 'my_secret_token',
 }
 ```
 
@@ -114,6 +110,7 @@ export default defineConfig {
     accounts: 'storage/accounts',
     sessions: 'storage/sessions',
     cache: 'storage/cache',
+    site: 'site',
   },
 
   // Excluding additional files an folders from syncing. Uses lftp's exclude
@@ -137,11 +134,11 @@ export default defineConfig {
 
 ## Commands
 
+> [!CAUTION] > `deploy` and all `push` commands will overwrite remote files or delete them if they don't exist locally. Likewise all `pull` commands will overwrite local files or delete them.
+
 ### 🚀 Deploy
 
 Upload your website to the server.
-
-Note: this will overwrite remote files and delete remote files that don't exist locally.
 
 ```sh
 npx kirby-deploy
@@ -153,8 +150,6 @@ npx kirby-deploy
 
 Upload your local content folder to your website.
 
-Note: this will **overwrite** remote files and **delete** any remote files that don't exist locally.
-
 ```sh
 npx kirby-deploy content-push
 ```
@@ -163,15 +158,15 @@ npx kirby-deploy content-push
 
 Download the content folder from your website.
 
-Note: this will **overwrite** local files and **delete** any local files that don't exist on your webspace.
+```sh
+npx kirby-deploy content-pull
+```
 
 ### 🔑 Accounts
 
 #### Push
 
 Upload your local accounts folder (including `.htpasswd`) to your website.
-
-Note: this will **overwrite** remote files and **delete** any remote files that don't exist locally.
 
 ```sh
 npx kirby-deploy content-push
@@ -181,7 +176,23 @@ npx kirby-deploy content-push
 
 Download the accounts folder (including `.htpasswd`) from your website.
 
-Note: this will _overwrite_ local files and _delete_ any local files that don't exist on your webspace.
+### 🌍 Languages
+
+#### Push
+
+Upload your local languages folder to your website.
+
+```sh
+npx kirby-deploy languages-push
+```
+
+#### Pull
+
+Download the languages folder from your website.
+
+```sh
+npx kirby-deploy languages-pull
+```
 
 ## Troubleshooting
 
