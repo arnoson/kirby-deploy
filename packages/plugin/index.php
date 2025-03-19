@@ -21,7 +21,8 @@ Kirby\Cms\App::plugin('arnoson/kirby-deploy', [
           die();
         }
 
-        $maintenanceFile = kirby()->root('index') . '/.maintenance';
+        $maintenanceFile =
+          kirby()->root('index') . '/.kirby-deploy-maintenance';
 
         if ($command === 'start') {
           F::write($maintenanceFile, '');
@@ -36,7 +37,7 @@ Kirby\Cms\App::plugin('arnoson/kirby-deploy', [
   ],
   'hooks' => [
     'route:before' => function ($route, $path) {
-      $maintenanceFile = kirby()->root('index') . '/.maintenance';
+      $maintenanceFile = kirby()->root('index') . '/.kirby-deploy-maintenance';
       if (
         F::exists($maintenanceFile) &&
         !str_starts_with($path, 'plugin-kirby-deploy/')
