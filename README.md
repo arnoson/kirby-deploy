@@ -103,8 +103,10 @@ Note: don't hardcode your ftp credentials in the config, use an `.env` file inst
 import { defineConfig } from 'kirby-deploy'
 export default defineConfig {
   // The default folder structure is 'flat' which is Kirby's
-  // default structure. If you use a public folder structure use 'public'...
-  folderStructure: 'public',
+  // default structure. But you can also use:
+  // - 'public' (https://getkirby.com/docs/guide/configuration/custom-folder-setup#public-and-private-folder-setup) 
+  // - 'composer' (https://github.com/getkirby/composerkit)
+  folderStructure: 'composer',
   // ...or define a custom structure
   folderStructure: {
     content: 'content',
@@ -112,6 +114,7 @@ export default defineConfig {
     accounts: 'storage/accounts',
     sessions: 'storage/sessions',
     cache: 'storage/cache',
+    logs: 'storage/logs',
     site: 'site',
   },
 
