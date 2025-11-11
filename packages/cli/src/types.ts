@@ -32,7 +32,12 @@ export const ConfigSchema = object({
   token: optional(string()),
   remoteDir: optional(string()),
   folderStructure: optional(
-    union([literal('flat'), literal('public'), literal('composer'), FolderStructureSchema]),
+    union([
+      literal('flat'),
+      literal('public'),
+      literal('composer'),
+      FolderStructureSchema,
+    ]),
   ),
   checkComposerLock: optional(boolean()),
   callWebhooks: optional(boolean()),
