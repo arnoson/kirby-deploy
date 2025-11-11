@@ -1,5 +1,5 @@
 import { loadConfig as load } from 'c12'
-import consola from 'consola'
+import { consola } from 'consola'
 import { flatten, parse } from 'valibot'
 import { Config, ConfigResolved, ConfigSchema, FolderStructure } from './types'
 

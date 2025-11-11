@@ -1,5 +1,5 @@
 import { defineCommand } from 'citty'
-import consola from 'consola'
+import { consola } from 'consola'
 import { colors } from 'consola/utils'
 import { join } from 'path/posix'
 import { loadConfig } from '../config'

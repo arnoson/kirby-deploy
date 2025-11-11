@@ -1,4 +1,4 @@
-import consola from 'consola'
+import { consola } from 'consola'
 import { colors } from 'consola/utils'
 import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'

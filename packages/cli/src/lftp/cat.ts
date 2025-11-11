@@ -1,5 +1,5 @@
 import { spawnSync } from 'child_process'
-import consola from 'consola'
+import { consola } from 'consola'
 import { platform } from 'os'
 import { ConfigResolved } from '../types'
 

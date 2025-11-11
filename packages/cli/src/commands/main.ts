@@ -1,5 +1,5 @@
 import { defineCommand } from 'citty'
-import consola from 'consola'
+import { consola } from 'consola'
 import { colors } from 'consola/utils'
 import { readFileSync } from 'fs'
 import { join, relative } from 'path/posix'
