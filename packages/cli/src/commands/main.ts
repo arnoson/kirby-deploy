@@ -33,6 +33,7 @@ export const main = defineCommand({
       `^${relative(cwd(), folderStructure.accounts)}`,
       `^${relative(cwd(), folderStructure.sessions)}`,
       `^${relative(cwd(), folderStructure.cache)}`,
+      `^${relative(cwd(), folderStructure.logs)}`,
       `^${relative(cwd(), join(folderStructure.site, 'languages'))}`,
     ]
     const excludeGlob = [...config.excludeGlob, '.*', '.*/']
