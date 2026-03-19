@@ -24,6 +24,11 @@ export const cat = (
       })
     : spawnSync('lftp', ['-c', commands.join('; ')], { encoding: 'utf-8' })
 
-  if (child.stderr) consola.error(child.stderr)
+  if (child.stderr) {
+    // 550 means the file doesn't exist, silently return undefined
+    if (child.stderr.includes('550')) return undefined
+    consola.error(child.stderr)
+    return undefined
+  }
   return child.stdout
 }

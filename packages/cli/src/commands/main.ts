@@ -52,7 +52,9 @@ export const main = defineCommand({
         encoding: 'utf-8',
       })
       const remoteComposerLock = cat('./composer.lock', config)
-      const skipVendor = localComposerLock === remoteComposerLock
+      const skipVendor =
+        remoteComposerLock !== undefined &&
+        localComposerLock === remoteComposerLock
       if (skipVendor) {
         exclude.push('^vendor/', '^kirby/')
         consola.info('Skipping vendor\n')
