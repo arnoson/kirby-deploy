@@ -44,7 +44,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     // 'flat' structure is the default.
     folderStructure = {
       content: 'content',
-      media: 'site/media',
+      media: 'media',
       accounts: 'site/accounts',
       sessions: 'site/sessions',
       cache: 'site/cache',
