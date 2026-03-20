@@ -77,6 +77,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     include: [],
     includeGlob: [],
     ...config,
+    url: config.url?.replace(/\/$/, ''),
     folderStructure,
     lftpSettings: {
       'ftp:ssl-force': true,
