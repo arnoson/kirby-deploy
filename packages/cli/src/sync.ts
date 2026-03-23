@@ -14,7 +14,7 @@ export const sync = async (
   const webhookBase = `${config.url}/plugin-kirby-deploy`
   const shouldCallWebhooks = mode === 'push' && config.callWebhooks
   const destination =
-    source === './' ? config.remoteDir : `./${join(config.remoteDir, source)}`
+    source === './' ? config.remoteDir : join(config.remoteDir, source)
 
   if (shouldCallWebhooks && !config.token) {
     consola.error('token needed to call webhooks')
