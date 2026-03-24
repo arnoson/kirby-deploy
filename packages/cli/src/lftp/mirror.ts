@@ -42,6 +42,9 @@ export const mirror = (
         if ((match = line.match(/Transferring file `(.*)'/))) {
           hasChanges = true
           consola.log(colors.blue(`→ ${match[1]}`))
+        } else if ((match = line.match(/Making directory `(.*)'/))) {
+          hasChanges = true
+          consola.log(colors.blue(`→ ${match[1]}`))
         } else if (
           (match = line.match(/Removing old (?:file|directory) `(.*)'/))
         ) {
