@@ -28,13 +28,13 @@ export const main = defineCommand({
     const exclude = [
       ...config.exclude,
       '^node_modules/',
-      `^${relative(cwd(), folderStructure.content)}`,
-      `^${relative(cwd(), folderStructure.media)}`,
-      `^${relative(cwd(), folderStructure.accounts)}`,
-      `^${relative(cwd(), folderStructure.sessions)}`,
-      `^${relative(cwd(), folderStructure.cache)}`,
-      `^${relative(cwd(), folderStructure.logs)}`,
-      `^${relative(cwd(), join(folderStructure.site, 'languages'))}`,
+      `^${relative(cwd(), folderStructure.content)}/.`,
+      `^${relative(cwd(), folderStructure.media)}/.`,
+      `^${relative(cwd(), folderStructure.accounts)}/.`,
+      `^${relative(cwd(), folderStructure.sessions)}/.`,
+      `^${relative(cwd(), folderStructure.cache)}/.`,
+      `^${relative(cwd(), folderStructure.logs)}/.`,
+      `^${relative(cwd(), join(folderStructure.site, 'languages'))}/.`,
     ]
     const excludeGlob = [...config.excludeGlob, '.*', '.*/']
     const include = config.include
