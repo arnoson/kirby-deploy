@@ -28,12 +28,11 @@ export const sync = async (
 
   const flags = [
     '--continue',
-    !config.force && '--only-newer',
     '--overwrite',
-    !config.force && '--use-cache',
-    config.force && '--transfer-all',
     '--delete',
     '--verbose',
+    !config.force && '--use-cache',
+    config.force && '--transfer-all',
     reverse && '--reverse',
     ...config.exclude.map((path: string) => `--exclude ${path}`),
     ...config.excludeGlob.map((path: string) => `--exclude-glob ${path}`),
