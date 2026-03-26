@@ -28,9 +28,10 @@ export const sync = async (
 
   const flags = [
     '--continue',
-    '--only-newer',
+    !config.force && '--only-newer',
     '--overwrite',
-    '--use-cache',
+    !config.force && '--use-cache',
+    config.force && '--transfer-all',
     '--delete',
     '--verbose',
     reverse && '--reverse',

@@ -69,6 +69,7 @@ export const loadConfig = async (): Promise<ConfigResolved | null> => {
     remoteDir: './',
     dryRun: true,
     verbose: false,
+    force: false,
     parallel: 10,
     checkComposerLock: true,
     callWebhooks: true,

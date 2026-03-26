@@ -13,7 +13,15 @@ import { contentPull, contentPush } from './content'
 import { languagesPull, languagesPush } from './languages'
 
 export const main = defineCommand({
-  run: async ({ rawArgs, cmd }) => {
+  args: {
+    force: {
+      type: 'boolean',
+      description:
+        'Transfer all files unconditionally, ignoring timestamps and cache',
+      default: false,
+    },
+  },
+  run: async ({ args, rawArgs, cmd }) => {
     // Todo: find a cleaner way to prevent the main command from running when
     // when a sub command is run.
     const [firstArg] = rawArgs
@@ -67,6 +75,7 @@ export const main = defineCommand({
       excludeGlob,
       include,
       includeGlob,
+      force: args.force,
     })
   },
   subCommands: {

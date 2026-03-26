@@ -43,6 +43,7 @@ export const ConfigSchema = object({
   callWebhooks: optional(boolean()),
   dryRun: optional(boolean()),
   verbose: optional(boolean()),
+  force: optional(boolean()),
   parallel: optional(number()),
   exclude: optional(array(string())),
   excludeGlob: optional(array(string())),

@@ -6,7 +6,7 @@ import { loadConfig } from '../config'
 import { sync } from '../sync'
 import { getBranch, upperFirst } from '../utils'
 
-const syncAccounts = async (mode: 'pull' | 'push') => {
+const syncAccounts = async (mode: 'pull' | 'push', force = false) => {
   const config = await loadConfig()
   if (!config) return
 
@@ -33,8 +33,22 @@ const syncAccounts = async (mode: 'pull' | 'push') => {
     excludeGlob: ['.*', '.*/'],
     include: ['.htpasswd'], // Make sure account passwords are synced.
     includeGlob: [],
+    force,
   })
 }
 
-export const accountsPush = defineCommand({ run: () => syncAccounts('push') })
-export const accountsPull = defineCommand({ run: () => syncAccounts('pull') })
+const forceArg = {
+  type: 'boolean',
+  description:
+    'Transfer all files unconditionally, ignoring timestamps and cache',
+  default: false,
+} as const
+
+export const accountsPush = defineCommand({
+  args: { force: forceArg },
+  run: ({ args }) => syncAccounts('push', args.force),
+})
+export const accountsPull = defineCommand({
+  args: { force: forceArg },
+  run: ({ args }) => syncAccounts('pull', args.force),
+})

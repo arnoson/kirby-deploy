@@ -6,7 +6,7 @@ import { loadConfig } from '../config'
 import { sync } from '../sync'
 import { getBranch, upperFirst } from '../utils'
 
-const syncContent = async (mode: 'pull' | 'push') => {
+const syncContent = async (mode: 'pull' | 'push', force = false) => {
   const config = await loadConfig()
   if (!config) return
 
@@ -33,8 +33,22 @@ const syncContent = async (mode: 'pull' | 'push') => {
     excludeGlob: ['.*', '.*/'],
     include: [],
     includeGlob: [],
+    force,
   })
 }
 
-export const contentPush = defineCommand({ run: () => syncContent('push') })
-export const contentPull = defineCommand({ run: () => syncContent('pull') })
+const forceArg = {
+  type: 'boolean',
+  description:
+    'Transfer all files unconditionally, ignoring timestamps and cache',
+  default: false,
+} as const
+
+export const contentPush = defineCommand({
+  args: { force: forceArg },
+  run: ({ args }) => syncContent('push', args.force),
+})
+export const contentPull = defineCommand({
+  args: { force: forceArg },
+  run: ({ args }) => syncContent('pull', args.force),
+})

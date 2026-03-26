@@ -7,5 +7,5 @@ export default defineConfig({
   url: process.env.URL,
   token: process.env.TOKEN,
   lftpFlags: ['--no-perms'],
-  verbose: true,
+  // verbose: true,
 })

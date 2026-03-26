@@ -129,6 +129,10 @@ export default defineConfig {
   // Show additional information, useful for debugging.
   verbose: true,
 
+  // Transfer all files unconditionally, ignoring timestamps and cache. Useful
+  // when the remote is in an unknown state and you want to restore it from scratch.
+  force: false,
+
   // Additional lftp settings.
   lftpSettings: { 'ftp:ssl-force': true },
 
@@ -150,6 +154,12 @@ Upload your website to the server.
 npx kirby-deploy
 ```
 
+Use `--force` to transfer all files unconditionally, skipping timestamp and cache checks. Useful when the remote is in an unknown state and you want to restore it from scratch.
+
+```sh
+npx kirby-deploy --force
+```
+
 ### 🗂️ Content
 
 #### Push
@@ -168,6 +178,13 @@ Download the content folder from your website.
 npx kirby-deploy content-pull
 ```
 
+All content commands also support `--force`:
+
+```sh
+npx kirby-deploy content-push --force
+npx kirby-deploy content-pull --force
+```
+
 ### 🔑 Accounts
 
 #### Push
@@ -175,12 +192,23 @@ npx kirby-deploy content-pull
 Upload your local accounts folder (including `.htpasswd`) to your website.
 
 ```sh
-npx kirby-deploy content-push
+npx kirby-deploy accounts-push
 ```
 
 #### Pull
 
 Download the accounts folder (including `.htpasswd`) from your website.
+
+```sh
+npx kirby-deploy accounts-pull
+```
+
+All accounts commands also support `--force`:
+
+```sh
+npx kirby-deploy accounts-push --force
+npx kirby-deploy accounts-pull --force
+```
 
 ### 🌍 Languages
 
@@ -198,6 +226,13 @@ Download the languages folder from your website.
 
 ```sh
 npx kirby-deploy languages-pull
+```
+
+All languages commands also support `--force`:
+
+```sh
+npx kirby-deploy languages-push --force
+npx kirby-deploy languages-pull --force
 ```
 
 ## Troubleshooting

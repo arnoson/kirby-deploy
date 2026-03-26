@@ -6,7 +6,7 @@ import { loadConfig } from '../config'
 import { sync } from '../sync'
 import { getBranch, upperFirst } from '../utils'
 
-const syncLanguages = async (mode: 'pull' | 'push') => {
+const syncLanguages = async (mode: 'pull' | 'push', force = false) => {
   const config = await loadConfig()
   if (!config) return
 
@@ -33,8 +33,22 @@ const syncLanguages = async (mode: 'pull' | 'push') => {
     excludeGlob: ['.*', '.*/'],
     include: [],
     includeGlob: [],
+    force,
   })
 }
 
-export const languagesPush = defineCommand({ run: () => syncLanguages('push') })
-export const languagesPull = defineCommand({ run: () => syncLanguages('pull') })
+const forceArg = {
+  type: 'boolean',
+  description:
+    'Transfer all files unconditionally, ignoring timestamps and cache',
+  default: false,
+} as const
+
+export const languagesPush = defineCommand({
+  args: { force: forceArg },
+  run: ({ args }) => syncLanguages('push', args.force),
+})
+export const languagesPull = defineCommand({
+  args: { force: forceArg },
+  run: ({ args }) => syncLanguages('pull', args.force),
+})
