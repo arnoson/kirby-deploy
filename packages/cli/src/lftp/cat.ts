@@ -24,8 +24,9 @@ export const cat = (
     : spawnSync('lftp', ['-c', commands.join('; ')], { encoding: 'utf-8' })
 
   if (child.stderr) {
-    // 550 means the file doesn't exist, silently return undefined
-    if (child.stderr.includes('550')) return undefined
+    // 550 or "No such file" means the file doesn't exist, silently return undefined
+    if (child.stderr.includes('550') || child.stderr.includes('No such file'))
+      return undefined
     consola.error(child.stderr)
     return undefined
   }
