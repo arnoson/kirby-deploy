@@ -11,8 +11,7 @@ export const cat = (
     ...Object.entries(lftpSettings).map(
       ([key, value]) => `set ${key} ${value}`,
     ),
-    `open ${host}`,
-    `user ${user} ${password}`,
+    `open -u ${user},${password} ${host}`,
     `cat ${file}`,
     'bye',
   ]

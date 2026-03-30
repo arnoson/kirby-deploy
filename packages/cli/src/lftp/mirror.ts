@@ -19,8 +19,7 @@ export const mirror = (
     ...Object.entries(lftpSettings).map(
       ([key, value]) => `set ${key} ${value}`,
     ),
-    `open ${host}`,
-    `user ${user} ${password}`, // mask credentials
+    `open -u ${user},${password} ${host}`,
     `mirror ${flags.join(' ')} ${source} ${destination}`,
     'bye',
   ]
