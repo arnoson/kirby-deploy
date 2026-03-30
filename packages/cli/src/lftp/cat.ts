@@ -1,18 +1,19 @@
 import { spawnSync } from 'child_process'
 import { consola } from 'consola'
+import { join } from 'path'
 import { platform } from 'os'
 import { ConfigResolved } from '../types'
 
 export const cat = (
   file: string,
-  { host, user, password, lftpSettings }: ConfigResolved,
+  { host, user, password, remoteDir, lftpSettings }: ConfigResolved,
 ) => {
   const commands = [
     ...Object.entries(lftpSettings).map(
       ([key, value]) => `set ${key} ${value}`,
     ),
     `open -u ${user},${password} ${host}`,
-    `cat ${file}`,
+    `cat ${join(remoteDir, file)}`,
     'bye',
   ]
 
