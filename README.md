@@ -68,7 +68,7 @@ See the `/example` for a more detailed setup with `.env` files and npm scripts.
 // kirby-deploy.config.js
 
 import { defineConfig } from 'kirby-deploy'
-export default defineConfig {
+export default defineConfig({
   // Ftp credentials
   host: 'ftp://example.com',
   user: 'user',
@@ -90,7 +90,7 @@ export default defineConfig {
   callWebhooks: true,
   // A secret token to protect the web hooks.
   token: 'my_secret_token',
-}
+})
 ```
 
 Note: don't hardcode your ftp credentials in the config, use an `.env` file instead. See the `/example` folder.
@@ -101,7 +101,7 @@ Note: don't hardcode your ftp credentials in the config, use an `.env` file inst
 // kirby-deploy.config.js
 
 import { defineConfig } from 'kirby-deploy'
-export default defineConfig {
+export default defineConfig({
   // The default folder structure is 'flat' which is Kirby's
   // default structure. But you can also use:
   // - 'public' (https://getkirby.com/docs/guide/configuration/custom-folder-setup#public-and-private-folder-setup) 
@@ -116,7 +116,7 @@ export default defineConfig {
     cache: 'storage/cache',
     logs: 'storage/logs',
     site: 'site',
-  },
+  }),
 
   // Excluding additional files an folders from syncing. Uses lftp's exclude
   // and exclude-glob.
