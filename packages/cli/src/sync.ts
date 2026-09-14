@@ -41,8 +41,14 @@ export const sync = async (
     ...config.lftpFlags,
   ].filter(Boolean) as string[]
 
+  // lftp's mirror command is `mirror [remote [local]]` by default, and
+  // `mirror --reverse [local [remote]]` when pushing.
+  const [mirrorSource, mirrorDestination] = reverse
+    ? [source, destination]
+    : [destination, source]
+
   if (config.verbose) {
-    logMirror(source, destination, flags, config)
+    logMirror(mirrorSource, mirrorDestination, flags, config)
   }
 
   if (config.dryRun) {
@@ -50,8 +56,8 @@ export const sync = async (
     consola.log('') // empty line
 
     const { hasChanges } = await mirror(
-      source,
-      destination,
+      mirrorSource,
+      mirrorDestination,
       [...flags, '--dry-run'],
       config,
     )
@@ -75,8 +81,8 @@ export const sync = async (
   let hasChanges, hasErrors
   try {
     ;({ hasChanges, hasErrors } = await mirror(
-      source,
-      destination,
+      mirrorSource,
+      mirrorDestination,
       flags,
       config,
     ))
